@@ -1,10 +1,12 @@
-// components/MapComponent.js
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const MapComponent = ({ handleWeatherInfo }) => {
+  const [map, setMap] = useState(null)
+  const [marker, setMarker] = useState(null)
+
   useEffect(() => {
     const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap`
+    script.src = 'https://maps.googleapis.com/maps/api/js?key=&callback=initMap'
     script.async = true
     script.defer = true
     document.body.appendChild(script)
@@ -20,20 +22,22 @@ const MapComponent = ({ handleWeatherInfo }) => {
     const mapInstance = new window.google.maps.Map(
       document.getElementById('map'),
       {
-        center: { lat: 0, lng: 0 },
+        center: { lat: 26.2124, lng: 127.6809 },
         zoom: 8
       }
     )
 
+    setMap(mapInstance)
+
     mapInstance.addListener('click', event => {
       const { latLng } = event
-      addWeatherMarker(latLng, mapInstance)
+      addWeatherMarker(latLng)
     })
   }
 
-  async function addWeatherMarker (latLng, map) {
+  async function addWeatherMarker (latLng) {
     const { lat, lng } = latLng.toJSON()
-    const openWeatherApiKey = 'b6977c16d6ce12feb631ffb7d3214ee9'
+    const openWeatherApiKey = ''
     const openWeatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${openWeatherApiKey}&units=metric`
 
     try {
@@ -46,25 +50,25 @@ const MapComponent = ({ handleWeatherInfo }) => {
         const humidity = data.main.humidity
 
         const weatherInfoContent = `
-          Weather: ${weatherDescription}<br>
-          Temperature: ${temperature} °C<br>
-          Humidity: ${humidity}%
-        `
+                    Weather: ${weatherDescription}<br>
+                    Temperature: ${temperature} °C<br>
+                    Humidity: ${humidity}%
+                `
 
         handleWeatherInfo(weatherInfoContent)
 
-        const infowindow = new window.google.maps.InfoWindow({
-          content: weatherInfoContent
-        })
+        // 前のマーカーが存在する場合、削除する
+        if (marker) {
+          marker.setMap(null)
+        }
 
-        const marker = new window.google.maps.Marker({
+        // 新しいマーカーを追加する
+        const newMarker = new window.google.maps.Marker({
           position: latLng,
           map: map
         })
 
-        marker.addListener('click', function () {
-          infowindow.open(map, marker)
-        })
+        setMarker(newMarker)
       } else {
         console.error('Failed to retrieve weather data:', data.message)
       }
