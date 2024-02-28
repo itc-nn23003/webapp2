@@ -1,8 +1,11 @@
+import React from 'react'
+import styles from '../styles/weekly.module.css'
+
 const WeeklyForecast = ({ weeklyForecast }) => {
   return (
     <div>
       <h2>一週間の天気予報</h2>
-      <ul>
+      <ul className={styles.weekly_forecast}>
         {weeklyForecast.map((forecast, index) => (
           <li key={index}>
             <p>日付: {forecast.date}</p>

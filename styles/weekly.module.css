@@ -1,0 +1,15 @@
+/* styles.css */
+
+.weekly_forecast {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+}
+
+.weekly_forecast li {
+  width: 200px; /* サイズを調整してください */
+  margin-right: 20px; /* 適切な間隔を指定してください */
+  margin-bottom: 20px; /* 適切な間隔を指定してください */
+}
+
