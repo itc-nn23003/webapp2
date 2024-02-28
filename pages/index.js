@@ -1,18 +1,8 @@
 import { useState } from 'react'
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api'
 import axios from 'axios'
 import CurrentWeather from '../components/CurrentWeather'
 import WeeklyForecast from '../components/WeeklyForecast'
-
-const containerStyle = {
-  width: '100%',
-  height: '700px'
-}
-
-const center = {
-  lat: 26.5,
-  lng: 127.9
-}
+import GoogleMapComponent from '../components/GoogleMapComponent'
 
 const MapComponent = ({ googleMapsApiKey }) => {
   const [markerPosition, setMarkerPosition] = useState(null)
@@ -75,18 +65,14 @@ const MapComponent = ({ googleMapsApiKey }) => {
   }
 
   return (
-    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={10}
-        onClick={handleMapClick}
-      >
-        {markerPosition && <Marker position={markerPosition} />}
-      </GoogleMap>
+    <div>
+      <GoogleMapComponent
+        markerPosition={markerPosition}
+        handleMapClick={handleMapClick}
+      />
       <CurrentWeather currentWeather={currentWeather} />
       <WeeklyForecast weeklyForecast={weeklyForecast} />
-    </LoadScript>
+    </div>
   )
 }
 
